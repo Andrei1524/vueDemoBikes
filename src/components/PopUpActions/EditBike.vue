@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div class="title-x">
+            <h2>Edit bike</h2>
+            <span @click="closePopUp">X</span>
+        </div>
         <div class="info">
             <div class="serial">
                 <h4>Serial no.</h4>
@@ -23,61 +27,80 @@
         </div>
 
         <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="popUpVisible = false">{{ info.btn_name }}</el-button>
+                <el-button type="primary" @click="popUpVisible = false">Save</el-button>
         </span>
     </div>
 </template>
 
+
 <script>
 export default {
-    props: ['selected_bike', 'info'],
     data() {
         return {
-            serial_no: this.selected_bike.serial_no,
-            docking_station: this.selected_bike.docking_station,
-            franchise_id: this.selected_bike.franchise_id,
-
+            serial_no: '',
+            docking_station: '',
+            franchise_id: '',
             options: {
-                available: this.selected_bike.status_info.available,
-                occupied: this.selected_bike.status_info.occupied,
-                under_maintenance: this.selected_bike.status_info.under_maintenance
+                available: '',
+                occupied: '',
+                under_maintenance: ''
             }
-            
         }
     },
     created() {
-        console.log(this.selected_bike)
+        this.serial_no = this.getSelectedBike.serial_no
+        this.docking_station = this.getSelectedBike.docking_station
+        this.franchise_id = this.getSelectedBike.franchise_id
+
+        this.options.available  = this.getSelectedBike.status_info.available
+        this.options.occupied  = this.getSelectedBike.status_info.occupied
+        this.options.under_maintenance  = this.getSelectedBike.status_info.under_maintenance
+    },
+    computed: {
+        getSelectedBike() {
+            return this.$store.getters.getSelectedBike
+        }
     },
     methods: {
         check(data) {
             this.options.available = false
             this.options.occupied = false
             this.options.under_maintenance = false
-
             this.options[data] = true
+        },
+        closePopUp() {
+            this.$store.dispatch('showPopUp', {show: false})
         }
     }
 }
 </script>
 
+
 <style lang="scss" scoped>
 h4 {
     margin: 0;
 }
-
 .info {
     display: flex;
     justify-content: space-between;
-
     h4 {
         margin-bottom: 4px;
     }
-
     > div {
         padding: 0 10px;
     }
 }
 .status {
     margin-top: 15px;
+}
+
+.title-x {
+    display: flex;
+    justify-content: space-between;
+
+    h2 {
+        text-align: center;
+        width: 100%;
+    }
 }
 </style>

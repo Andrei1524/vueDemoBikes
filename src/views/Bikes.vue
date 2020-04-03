@@ -8,7 +8,7 @@
         </div>
 
         <div class="space-between add-show">
-            <el-button type="primary" @click="popUp({show: true, name: 'add'})" round>+ ADD BIKE</el-button>
+            <el-button type="primary" @click="popUp({name: 'add', show: true})" round>+ ADD BIKE</el-button>
             <div class="show">
                 <h4>Show</h4>
 
@@ -17,10 +17,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- pop-ups -->
-            <PopUp />
-        
 
         <!-- /pop-ups-->
         <div id="bikes-show">
@@ -31,7 +27,7 @@
 
             <div class="show-bikes">
                 <el-table
-                :data="bikes"
+                :data="getBikes"
                 style="width: 100%;">
                     <el-table-column
                         prop="status"
@@ -64,8 +60,8 @@
                         width="180">
 
                         <template slot-scope="scope">
-                        <el-button @click="popUp({show: true, name: 'edit'}, scope.$index)" type="text" size="small"><i class="icons del-icon el-icon-edit"></i></el-button>
-                        <el-button @click="popUp({show: true, name: 'delete'}, scope.$index)" type="text" size="small"><i class="icons edit-icon el-icon-delete"></i></el-button>
+                        <el-button @click="popUp({name: 'edit', show: true, index: scope.$index})" type="text" size="small"><i class="icons del-icon el-icon-edit"></i></el-button>
+                        <el-button @click="popUp({name: 'delete', show: true}, scope.$index)" type="text" size="small"><i class="icons edit-icon el-icon-delete"></i></el-button>
                     </template>
                     </el-table-column>
                 </el-table>
@@ -76,11 +72,8 @@
 
 <script>
 
-import PopUp from '../components/PopUp'
-import { bus } from '../main'
 export default {
     components: {
-        PopUp
     },
     data() {
         return {
@@ -89,58 +82,22 @@ export default {
                 show: 'Available',
                 search: ''
             },
-            bikes: [
-                {
-                    status: 'Available',
-                    status_info: {
-                        available: true,
-                        occupied: false,
-                        under_maintenance: false
-                    },
-                    serial_no: 'abdc-5252wy',
-                    docking_station: 'Docking no. 1',
-                    franchise_id: '1262835'
-                },
-                {
-                    status: {
-                        available: true,
-                        occupied: false,
-                        under_maintenance: false
-                    },
-                    serial_no: 'abdc-522wy',
-                    docking_station: 'Docking no. 2',
-                    franchise_id: '145835'
-                }
-            ]
+            bikes: []
         }
     },
     mounted() {
         
     },
     methods: {
-        popUp(data, index) {
-            let addInfo = {
-                pop_name: 'Add Bike',
-                btn_name: 'Add'
-            }
+        popUp(data) {
+            // let selected_bike = this.bikes[index]
 
-            let editInfo = {
-                pop_name: 'Edit Bike',
-                btn_name: 'Save'
-            }
-
-            let deleteInfo = {
-                pop_name: 'Delete Bike',
-                btn_name: 'Delete'
-            }
-
-            if (data.name == 'add') data.info = addInfo
-            if (data.name == 'edit') data.info = editInfo
-            if (data.name == 'delete') data.info = deleteInfo
-            
-            let selected_bike = this.bikes[index]
-
-            bus.$emit('show_popup', data, selected_bike)
+            this.$store.dispatch('showPopUp', data)
+        }
+    },
+    computed: {
+        getBikes() {
+            return this.$store.getters.getBikes
         }
     }
 }

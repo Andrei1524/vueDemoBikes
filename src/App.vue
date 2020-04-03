@@ -2,6 +2,15 @@
   <div id="app">
 
     <div class="app-wrap">
+
+      <div v-if="PopUpState.show" class="pop-up-wrapper">
+        <div class="pop-up">
+          <AddBike v-if="PopUpState.name == 'add'" />
+          <EditBike v-if="PopUpState.name == 'edit'" />
+        </div>
+
+      </div>
+
       <SideMenu />
       <router-view class="page-view" />
     </div>
@@ -11,11 +20,20 @@
 
 <script>
 import SideMenu from './components/SideMenu/SideMenu'
+import AddBike from './components/PopUpActions/AddBike'
+import EditBike from './components/PopUpActions/EditBike'
 
 export default {
   name: 'app',
   components: {
-    SideMenu
+    SideMenu,
+    AddBike,
+    EditBike
+  },
+  computed: {
+    PopUpState() {
+      return this.$store.getters.PopUpState
+    }
   }
 }
 </script>
@@ -53,6 +71,29 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+
+.pop-up-wrapper {
+  content: "";
+  display: block;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+    background: #353535ad;
+    z-index: 99;
+}
+
+.pop-up {
+    z-index: 9999;
+    position: absolute;
+    width: fit-content;
+    right: 50%;
+    transform: translateX(50%);
+    background: #FFF;
+    padding: 20px;
+    top: 100px;
+}
+
+
 /* icons (size,etc.) */
 
 .icons {
