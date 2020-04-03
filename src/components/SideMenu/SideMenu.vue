@@ -12,9 +12,11 @@ export default {
 </script>
 
 <style lang="scss">
+$menu_width: 240px;
 .side-menu {
     background: #2761F0;
-    width: 200px;
+    min-width: $menu_width;
     color: #FFF;
+    border-bottom-right-radius: 60px;
 }
 </style>
