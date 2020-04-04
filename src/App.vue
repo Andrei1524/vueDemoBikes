@@ -7,6 +7,7 @@
         <div class="pop-up">
           <AddBike v-if="PopUpState.name == 'add'" />
           <EditBike v-if="PopUpState.name == 'edit'" />
+          <DeleteBike v-if="PopUpState.name == 'delete'" />
         </div>
 
       </div>
@@ -22,13 +23,19 @@
 import SideMenu from './components/SideMenu/SideMenu'
 import AddBike from './components/PopUpActions/AddBike'
 import EditBike from './components/PopUpActions/EditBike'
+import DeleteBike from './components/PopUpActions/DeleteBike'
 
 export default {
   name: 'app',
   components: {
     SideMenu,
     AddBike,
-    EditBike
+    EditBike,
+    DeleteBike
+  },
+  created() {
+    // load posts
+    this.$store.dispatch('loadBikesFromApi')
   },
   computed: {
     PopUpState() {
@@ -93,6 +100,15 @@ body {
     top: 100px;
 }
 
+.title-x {
+    display: flex;
+    justify-content: space-between;
+
+    h2 {
+        text-align: center;
+        width: 100%;
+    }
+}
 
 /* icons (size,etc.) */
 

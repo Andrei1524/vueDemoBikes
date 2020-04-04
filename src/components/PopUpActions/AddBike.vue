@@ -21,13 +21,13 @@
 
         <div class="status">
             <h4>Status</h4>
-            <el-checkbox v-model="options.available" @change="check('available')">Available</el-checkbox>
-            <el-checkbox v-model="options.occupied" @change="check('occupied')">Occupied</el-checkbox>
-            <el-checkbox v-model="options.under_maintenance" @change="check('under_maintenance')">Under Maintenance</el-checkbox>
+            <el-checkbox v-model="status_info.available" @change="check('available')">Available</el-checkbox>
+            <el-checkbox v-model="status_info.occupied" @change="check('occupied')">Occupied</el-checkbox>
+            <el-checkbox v-model="status_info.under_maintenance" @change="check('under_maintenance')">Under Maintenance</el-checkbox>
         </div>
 
         <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="popUpVisible = false">Add</el-button>
+                <el-button type="primary" @click="Add">Add</el-button>
         </span>
     </div>
 </template>
@@ -37,23 +37,33 @@
 export default {
     data() {
         return {
+            status: '',
+            status_info: {
+                available: false,
+                occupied: false,
+                under_maintenance: false
+            },
             serial_no: '',
             docking_station: '',
-            franchise_id: '',
-            options: {
-                available: '',
-                occupied: '',
-                under_maintenance: ''
-            }
-            
+            franchise_id: ''
         }
     },
     methods: {
+        Add() {
+            this.computeStatus()
+            this.$store.dispatch('addBike', this._data)
+
+        },
+        computeStatus() {
+            if (this.status_info.available) this.status = 'Available'
+            if (this.status_info.occupied) this.status = 'Occupied'
+            if (this.status_info.under_maintenance) this.status = 'Under maintenance'
+        },
         check(data) {
-            this.options.available = false
-            this.options.occupied = false
-            this.options.under_maintenance = false
-            this.options[data] = true
+            this.status_info.available = false
+            this.status_info.occupied = false
+            this.status_info.under_maintenance = false
+            this.status_info[data] = true
         },
         closePopUp() {
             this.$store.dispatch('showPopUp', {show: false})

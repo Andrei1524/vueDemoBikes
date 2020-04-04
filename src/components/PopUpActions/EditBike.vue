@@ -21,13 +21,13 @@
 
         <div class="status">
             <h4>Status</h4>
-            <el-checkbox v-model="options.available" @change="check('available')">Available</el-checkbox>
-            <el-checkbox v-model="options.occupied" @change="check('occupied')">Occupied</el-checkbox>
-            <el-checkbox v-model="options.under_maintenance" @change="check('under_maintenance')">Under Maintenance</el-checkbox>
+            <el-checkbox v-model="status_info.available" @change="check('available')">Available</el-checkbox>
+            <el-checkbox v-model="status_info.occupied" @change="check('occupied')">Occupied</el-checkbox>
+            <el-checkbox v-model="status_info.under_maintenance" @change="check('under_maintenance')">Under Maintenance</el-checkbox>
         </div>
 
         <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="popUpVisible = false">Save</el-button>
+                <el-button type="primary" @click="Edit">Save</el-button>
         </span>
     </div>
 </template>
@@ -37,24 +37,20 @@
 export default {
     data() {
         return {
-            serial_no: '',
-            docking_station: '',
-            franchise_id: '',
-            options: {
+            id: undefined,
+            status: '',
+            status_info: {
                 available: '',
                 occupied: '',
                 under_maintenance: ''
-            }
+            },
+            serial_no: '',
+            docking_station: '',
+            franchise_id: '',
         }
     },
     created() {
-        this.serial_no = this.getSelectedBike.serial_no
-        this.docking_station = this.getSelectedBike.docking_station
-        this.franchise_id = this.getSelectedBike.franchise_id
-
-        this.options.available  = this.getSelectedBike.status_info.available
-        this.options.occupied  = this.getSelectedBike.status_info.occupied
-        this.options.under_maintenance  = this.getSelectedBike.status_info.under_maintenance
+        this._data = this.getSelectedBike
     },
     computed: {
         getSelectedBike() {
@@ -62,11 +58,20 @@ export default {
         }
     },
     methods: {
+        Edit() {
+            this.computeStatus()
+            this.$store.dispatch('editBike', this._data)
+        },
+        computeStatus() {
+            if (this.status_info.available) this.status = 'Available'
+            if (this.status_info.occupied) this.status = 'Occupied'
+            if (this.status_info.under_maintenance) this.status = 'Under maintenance'
+        },
         check(data) {
-            this.options.available = false
-            this.options.occupied = false
-            this.options.under_maintenance = false
-            this.options[data] = true
+            this.status_info.available = false
+            this.status_info.occupied = false
+            this.status_info.under_maintenance = false
+            this.status_info[data] = true
         },
         closePopUp() {
             this.$store.dispatch('showPopUp', {show: false})
@@ -94,13 +99,5 @@ h4 {
     margin-top: 15px;
 }
 
-.title-x {
-    display: flex;
-    justify-content: space-between;
 
-    h2 {
-        text-align: center;
-        width: 100%;
-    }
-}
 </style>

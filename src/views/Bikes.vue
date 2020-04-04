@@ -32,11 +32,11 @@
                     <el-table-column
                         prop="status"
                         label="Status"
-                        width="180">
-                        <template>
+                        width="220">
+                        <template slot-scope="scope">
                             <div class="table-td-icon">
                                 <i class="blue-circle"></i>
-                                <span style="margin-left: 10px">Available</span>
+                                <span style="margin-left: 10px">{{ scope.row.status }}</span>
                             </div>
                         </template>
                     </el-table-column>
@@ -61,7 +61,7 @@
 
                         <template slot-scope="scope">
                         <el-button @click="popUp({name: 'edit', show: true, index: scope.$index})" type="text" size="small"><i class="icons del-icon el-icon-edit"></i></el-button>
-                        <el-button @click="popUp({name: 'delete', show: true}, scope.$index)" type="text" size="small"><i class="icons edit-icon el-icon-delete"></i></el-button>
+                        <el-button @click="popUp({name: 'delete', show: true, index: scope.$index}, )" type="text" size="small"><i class="icons edit-icon el-icon-delete"></i></el-button>
                     </template>
                     </el-table-column>
                 </el-table>
@@ -91,7 +91,6 @@ export default {
     methods: {
         popUp(data) {
             // let selected_bike = this.bikes[index]
-
             this.$store.dispatch('showPopUp', data)
         }
     },
