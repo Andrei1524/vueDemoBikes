@@ -8,7 +8,7 @@
         <p>are you sure you want to continue</p>
 
         <span slot="footer" class="dialog-footer">
-                <el-button type="danger" @click="popUpVisible = false">Delete</el-button>
+                <el-button type="danger" @click="Delete">Delete</el-button>
         </span>
     </div>
 </template>
@@ -17,6 +17,9 @@
 <script>
 export default {
     methods: {
+        Delete() {
+            this.$store.dispatch('deleteBike')
+        },
         closePopUp() {
             this.$store.dispatch('showPopUp', {show: false})
         }

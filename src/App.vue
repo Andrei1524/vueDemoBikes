@@ -35,7 +35,7 @@ export default {
   },
   created() {
     // load posts
-    this.$store.dispatch('loadBikesFromApi')
+    
   },
   computed: {
     PopUpState() {

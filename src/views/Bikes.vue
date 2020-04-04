@@ -27,7 +27,7 @@
 
             <div class="show-bikes">
                 <el-table
-                :data="getBikes"
+                :data="bikes"
                 style="width: 100%;">
                     <el-table-column
                         prop="status"
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
     components: {
@@ -85,8 +86,18 @@ export default {
             bikes: []
         }
     },
-    mounted() {
+    created() {
+        axios.get('https://vue-bikes.firebaseio.com/bikes.json').then(res => {
+          const bikesArray = []
+
+          for (const key in res.data) {
+            bikesArray.push({ ...res.data[key], id: key})
+          }
         
+         this.$store.dispatch('loadBikesFromApi', bikesArray)
+      })
+
+      
     },
     methods: {
         popUp(data) {
@@ -95,8 +106,8 @@ export default {
         }
     },
     computed: {
-        getBikes() {
-            return this.$store.getters.getBikes
+        getBikes(state) {                
+            return state.bikes = this.$store.getters.getBikes
         }
     }
 }

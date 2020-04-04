@@ -46,11 +46,21 @@ export default {
             },
             serial_no: '',
             docking_station: '',
-            franchise_id: '',
+            franchise_id: ''
         }
     },
     created() {
-        this._data = this.getSelectedBike
+        const bike = this.getSelectedBike
+        this.id = bike.id
+        this.status = bike.status
+        this.status_info.available = bike.status_info.available
+        this.status_info.occupied = bike.status_info.occupied
+        this.status_info.under_maintenance = bike.status_info.under_maintenance
+
+        this.serial_no = bike.serial_no
+        this.docking_station = bike.docking_station
+        this.franchise_id = bike.franchise_id
+        
     },
     computed: {
         getSelectedBike() {

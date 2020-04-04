@@ -17,6 +17,9 @@ export default new Vuex.Store({
     showPopUp(state, data) {
       state.viewPopUp.name = data.name ? data.name : ''
       state.viewPopUp.show = data.show
+
+      // clear selected data 
+      if (!data.show) state.selectedBike = {}
     },
     selectBike(state, index) {
       state.selectedBike = state.bikes[index]
@@ -30,43 +33,53 @@ export default new Vuex.Store({
     editBike(state, bikeData) {
       let itemIndex = state.bikes.findIndex(bike => bike.id == bikeData.id)
 
-      state.bikes[itemIndex] = bikeData  // update the bike in the vuex store
-      
+      state.bikes.splice(itemIndex, 1, bikeData)  // update the bike in the vuex store
+    },
+    deleteBike(state) {
+      axios.delete('https://vue-bikes.firebaseio.com/bikes/' + state.selectedBike.id + '.json').then(() => {
+        
+        let itemIndex = state.bikes.findIndex(bike => bike.id == state.selectedBike.id)
+
+        state.bikes.splice(itemIndex, 1)
+      })
     }
   },
   actions: {
-    loadBikesFromApi() {
-      axios.get('https://vue-bikes.firebaseio.com/bikes.json').then(res => {
-          const bikesArray = []
-
-          for (const key in res.data) {
-            bikesArray.push({ ...res.data[key], id: key})
-          }
-
-        this.commit('loadBikesFromApi', bikesArray)
-      })
+    loadBikesFromApi({commit},bikesArray) {
+      commit('loadBikesFromApi', bikesArray)
     },
     addBike({commit}, bikeData) {
 
-      axios.post('https://vue-bikes.firebaseio.com/bikes.json', bikeData).then(() => {
-          commit('addBike', bikeData)
-
+      axios.post('https://vue-bikes.firebaseio.com/bikes.json', bikeData).then((res) => {
+          // id
+          const id = res.data.name
+          commit('addBike', {...bikeData, id: id})
+          
           // close the pop up
           commit('showPopUp', {show: false})
       })
 
     },
-    editBike({commit},bikeData) {
+    editBike({commit}, bikeData) {
       axios.put('https://vue-bikes.firebaseio.com/bikes/'+ bikeData.id + '.json', bikeData).then(() => {
         commit('editBike', bikeData)
+        //console.log(res.data)
         commit('showPopUp', {show: false})
       })
-      
+    },
+    deleteBike({commit}) {
+      commit('deleteBike')
+      // close the pop up
+      commit('showPopUp', {show: false})
     },
     showPopUp({dispatch, commit}, data) {
       commit('showPopUp', data)
 
       if(data.name == 'edit') {
+        dispatch('selectBike', data.index)
+      }
+
+      if (data.name == 'delete') {
         dispatch('selectBike', data.index)
       }
     },
