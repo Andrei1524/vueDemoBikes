@@ -27,7 +27,7 @@
 
             <div class="show-bikes">
                 <el-table
-                :data="bikes"
+                :data="getBikes"
                 style="width: 100%;">
                     <el-table-column
                         prop="status"
@@ -60,8 +60,8 @@
                         width="180">
 
                         <template slot-scope="scope">
-                        <el-button @click="popUp({name: 'edit', show: true, index: scope.$index})" type="text" size="small"><i class="icons del-icon el-icon-edit"></i></el-button>
-                        <el-button @click="popUp({name: 'delete', show: true, index: scope.$index}, )" type="text" size="small"><i class="icons edit-icon el-icon-delete"></i></el-button>
+                            <el-button @click="popUp({name: 'edit', show: true, index: scope.$index})" type="text" size="small"><i class="icons del-icon el-icon-edit"></i></el-button>
+                            <el-button @click="popUp({name: 'delete', show: true, index: scope.$index}, )" type="text" size="small"><i class="icons edit-icon el-icon-delete"></i></el-button>
                     </template>
                     </el-table-column>
                 </el-table>
@@ -106,8 +106,8 @@ export default {
         }
     },
     computed: {
-        getBikes(state) {                
-            return state.bikes = this.$store.getters.getBikes
+        getBikes() {                
+            return this.$store.getters.getBikes
         }
     }
 }

@@ -35,13 +35,10 @@ export default new Vuex.Store({
 
       state.bikes.splice(itemIndex, 1, bikeData)  // update the bike in the vuex store
     },
-    deleteBike(state) {
-      axios.delete('https://vue-bikes.firebaseio.com/bikes/' + state.selectedBike.id + '.json').then(() => {
-        
-        let itemIndex = state.bikes.findIndex(bike => bike.id == state.selectedBike.id)
+    deleteBike(state, selectedBikeId) {
+      let itemIndex = state.bikes.findIndex(bike => bike.id == selectedBikeId)
 
-        state.bikes.splice(itemIndex, 1)
-      })
+      state.bikes.splice(itemIndex, 1)
     }
   },
   actions: {
@@ -67,8 +64,14 @@ export default new Vuex.Store({
         commit('showPopUp', {show: false})
       })
     },
-    deleteBike({commit}) {
-      commit('deleteBike')
+    deleteBike({commit, getters}) {
+      let selectedBike = getters.getSelectedBike // from getters
+
+      axios.delete('https://vue-bikes.firebaseio.com/bikes/' + selectedBike.id + '.json').then(() => {
+        commit('deleteBike', selectedBike.id)
+      })
+      
+      
       // close the pop up
       commit('showPopUp', {show: false})
     },
