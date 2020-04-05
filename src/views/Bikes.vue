@@ -147,7 +147,6 @@ export default {
 }
 
 .show-bikes .el-table th, .el-table tr {
-    background-color: #E6E9EE;
     color: #333B76 !important;
     padding: 14px 10px;
     font-size: 13px !important;
